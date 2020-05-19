@@ -32,7 +32,11 @@
 		"int"
 	],
 	"EnableThreading": [
-		false,
+		true,
+		"bool"
+	],
+	"UseFullEmailAddressAsLogin": [
+		true,
 		"bool"
 	],
 	"EnableSieve": [
