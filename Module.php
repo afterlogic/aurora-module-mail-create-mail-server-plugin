@@ -16,60 +16,56 @@ namespace Aurora\Modules\CreateMailServerPlugin;
  */
 class Module extends \Aurora\System\Module\AbstractModule
 {
-	/**
-	 * Initializes Mail Module.
-	 * 
-	 * @ignore
-	 */
-	public function init() 
-	{
-		$this->subscribeEvent('StandardLoginFormWebclient::Login::before', array($this, 'onBeforeLogin'));
-	}
+    /**
+     * Initializes Mail Module.
+     *
+     * @ignore
+     */
+    public function init()
+    {
+        $this->subscribeEvent('StandardLoginFormWebclient::Login::before', array($this, 'onBeforeLogin'));
+    }
 
-	public function onBeforeLogin($aArgs, &$mResult)
-	{
-		$sDomain = \MailSo\Base\Utils::GetDomainFromEmail($aArgs['Login']);
-		$oServer = false;
-		$aGetMailServerResult = \Aurora\Modules\Mail\Module::Decorator()->GetMailServerByDomain($sDomain, /*AllowWildcardDomain*/false);
-		if (!empty($aGetMailServerResult) && isset($aGetMailServerResult['Server']) && $aGetMailServerResult['Server'] instanceof \Aurora\Modules\Mail\Models\Server)
-		{
-			$oServer = $aGetMailServerResult['Server'];
-		}
+    public function onBeforeLogin($aArgs, &$mResult)
+    {
+        $sDomain = \MailSo\Base\Utils::GetDomainFromEmail($aArgs['Login']);
+        $oServer = false;
+        $aGetMailServerResult = \Aurora\Modules\Mail\Module::Decorator()->GetMailServerByDomain($sDomain, /*AllowWildcardDomain*/false);
+        if (!empty($aGetMailServerResult) && isset($aGetMailServerResult['Server']) && $aGetMailServerResult['Server'] instanceof \Aurora\Modules\Mail\Models\Server) {
+            $oServer = $aGetMailServerResult['Server'];
+        }
 
-		if (!$oServer)
-		{
-			$bConnectValid = false;
-			try
-			{
-				$bConnectValid = false;
-				$oImapClient = \MailSo\Imap\ImapClient::NewInstance();
-				$oImapClient->Connect($this->getConfig('IncomingServer').$sDomain, $this->getConfig('IncomingPort'));
-				$bConnectValid  = $oImapClient->Login($aArgs['Login'], $aArgs['Password']);
-				$oImapClient->LogoutAndDisconnect();
-			}
-			catch (\Exception $oException) {}
-			if ($bConnectValid)
-			{
-				\Aurora\System\Api::skipCheckUserRole(true);
-				$iIdServer = \Aurora\Modules\Mail\Module::getInstance()->CreateServer(
-					$sDomain, 
-					$this->getConfig('IncomingServer').$sDomain, 
-					$this->getConfig('IncomingPort'), 
-					$this->getConfig('IncomingUseSsl'),
-					$this->getConfig('OutgoingServer').$sDomain, 
-					$this->getConfig('OutgoingPort'), 
-					$this->getConfig('OutgoingUseSsl'), 
-					$this->getConfig('SmtpAuthType'), 
-					$sDomain,
-					$this->getConfig('EnableThreading'), 
-					$this->getConfig('EnableSieve'), 
-					$this->getConfig('SievePort'), 
-					$this->getConfig('SmtpLogin'), 
-					$this->getConfig('SmtpPassword'), 
-					$this->getConfig('UseFullEmailAddressAsLogin')
-				);
-				\Aurora\System\Api::skipCheckUserRole(false);
-			}
-		}
-	}
+        if (!$oServer) {
+            $bConnectValid = false;
+            try {
+                $bConnectValid = false;
+                $oImapClient = \MailSo\Imap\ImapClient::NewInstance();
+                $oImapClient->Connect($this->getConfig('IncomingServer').$sDomain, $this->getConfig('IncomingPort'));
+                $bConnectValid  = $oImapClient->Login($aArgs['Login'], $aArgs['Password']);
+                $oImapClient->LogoutAndDisconnect();
+            } catch (\Exception $oException) {
+            }
+            if ($bConnectValid) {
+                \Aurora\System\Api::skipCheckUserRole(true);
+                $iIdServer = \Aurora\Modules\Mail\Module::getInstance()->CreateServer(
+                    $sDomain,
+                    $this->getConfig('IncomingServer').$sDomain,
+                    $this->getConfig('IncomingPort'),
+                    $this->getConfig('IncomingUseSsl'),
+                    $this->getConfig('OutgoingServer').$sDomain,
+                    $this->getConfig('OutgoingPort'),
+                    $this->getConfig('OutgoingUseSsl'),
+                    $this->getConfig('SmtpAuthType'),
+                    $sDomain,
+                    $this->getConfig('EnableThreading'),
+                    $this->getConfig('EnableSieve'),
+                    $this->getConfig('SievePort'),
+                    $this->getConfig('SmtpLogin'),
+                    $this->getConfig('SmtpPassword'),
+                    $this->getConfig('UseFullEmailAddressAsLogin')
+                );
+                \Aurora\System\Api::skipCheckUserRole(false);
+            }
+        }
+    }
 }
