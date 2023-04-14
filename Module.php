@@ -31,7 +31,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 		$sDomain = \MailSo\Base\Utils::GetDomainFromEmail($aArgs['Login']);
 		$oServer = false;
 		$aGetMailServerResult = \Aurora\Modules\Mail\Module::Decorator()->GetMailServerByDomain($sDomain, /*AllowWildcardDomain*/false);
-		if (!empty($aGetMailServerResult) && isset($aGetMailServerResult['Server']) && $aGetMailServerResult['Server'] instanceof \Aurora\Modules\Mail\Classes\Server)
+		if (!empty($aGetMailServerResult) && isset($aGetMailServerResult['Server']) && $aGetMailServerResult['Server'] instanceof \Aurora\Modules\Mail\Models\Server)
 		{
 			$oServer = $aGetMailServerResult['Server'];
 		}
