@@ -12,6 +12,8 @@ namespace Aurora\Modules\CreateMailServerPlugin;
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2023, Afterlogic Corp.
  *
+ * @property Settings $oModuleSettings
+ *
  * @package Modules
  */
 class Module extends \Aurora\System\Module\AbstractModule
@@ -58,7 +60,7 @@ class Module extends \Aurora\System\Module\AbstractModule
             try {
                 $bConnectValid = false;
                 $oImapClient = \MailSo\Imap\ImapClient::NewInstance();
-                $oImapClient->Connect($this->getConfig('IncomingServer').$sDomain, $this->getConfig('IncomingPort'));
+                $oImapClient->Connect($this->oModuleSettings->IncomingServer.$sDomain, $this->oModuleSettings->IncomingPort);
                 $bConnectValid  = $oImapClient->Login($aArgs['Login'], $aArgs['Password']);
                 $oImapClient->LogoutAndDisconnect();
             } catch (\Exception $oException) {
@@ -67,20 +69,20 @@ class Module extends \Aurora\System\Module\AbstractModule
                 \Aurora\System\Api::skipCheckUserRole(true);
                 $iIdServer = \Aurora\Modules\Mail\Module::getInstance()->CreateServer(
                     $sDomain,
-                    $this->getConfig('IncomingServer').$sDomain,
-                    $this->getConfig('IncomingPort'),
-                    $this->getConfig('IncomingUseSsl'),
-                    $this->getConfig('OutgoingServer').$sDomain,
-                    $this->getConfig('OutgoingPort'),
-                    $this->getConfig('OutgoingUseSsl'),
-                    $this->getConfig('SmtpAuthType'),
+                    $this->oModuleSettings->IncomingServer.$sDomain,
+                    $this->oModuleSettings->IncomingPort,
+                    $this->oModuleSettings->IncomingUseSsl,
+                    $this->oModuleSettings->OutgoingServer.$sDomain,
+                    $this->oModuleSettings->OutgoingPort,
+                    $this->oModuleSettings->OutgoingUseSsl,
+                    $this->oModuleSettings->SmtpAuthType,
                     $sDomain,
-                    $this->getConfig('EnableThreading'),
-                    $this->getConfig('EnableSieve'),
-                    $this->getConfig('SievePort'),
-                    $this->getConfig('SmtpLogin'),
-                    $this->getConfig('SmtpPassword'),
-                    $this->getConfig('UseFullEmailAddressAsLogin')
+                    $this->oModuleSettings->EnableThreading,
+                    $this->oModuleSettings->EnableSieve,
+                    $this->oModuleSettings->SievePort,
+                    $this->oModuleSettings->SmtpLogin,
+                    $this->oModuleSettings->SmtpPassword,
+                    $this->oModuleSettings->UseFullEmailAddressAsLogin
                 );
                 \Aurora\System\Api::skipCheckUserRole(false);
             }
