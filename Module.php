@@ -27,9 +27,16 @@ class Module extends \Aurora\System\Module\AbstractModule
     {
         $this->subscribeEvent('StandardLoginFormWebclient::Login::before', array($this, 'onBeforeLogin'));
     }
-	
-	/**
-     *
+
+    /**
+     * @return Module
+     */
+    public static function getInstance()
+    {
+        return parent::getInstance();
+    }
+
+    /**
      * @return Module
      */
     public static function Decorator()
@@ -38,7 +45,6 @@ class Module extends \Aurora\System\Module\AbstractModule
     }
 
     /**
-     *
      * @return Settings
      */
     public function getModuleSettings()
