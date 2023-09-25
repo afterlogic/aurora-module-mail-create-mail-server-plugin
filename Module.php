@@ -66,7 +66,7 @@ class Module extends \Aurora\System\Module\AbstractModule
             try {
                 $bConnectValid = false;
                 $oImapClient = \MailSo\Imap\ImapClient::NewInstance();
-                $oImapClient->Connect($this->oModuleSettings->IncomingServer.$sDomain, $this->oModuleSettings->IncomingPort);
+                $oImapClient->Connect($this->oModuleSettings->IncomingServer . $sDomain, $this->oModuleSettings->IncomingPort);
                 $bConnectValid  = $oImapClient->Login($aArgs['Login'], $aArgs['Password']);
                 $oImapClient->LogoutAndDisconnect();
             } catch (\Exception $oException) {
@@ -75,10 +75,10 @@ class Module extends \Aurora\System\Module\AbstractModule
                 \Aurora\System\Api::skipCheckUserRole(true);
                 $iIdServer = \Aurora\Modules\Mail\Module::getInstance()->CreateServer(
                     $sDomain,
-                    $this->oModuleSettings->IncomingServer.$sDomain,
+                    $this->oModuleSettings->IncomingServer . $sDomain,
                     $this->oModuleSettings->IncomingPort,
                     $this->oModuleSettings->IncomingUseSsl,
-                    $this->oModuleSettings->OutgoingServer.$sDomain,
+                    $this->oModuleSettings->OutgoingServer . $sDomain,
                     $this->oModuleSettings->OutgoingPort,
                     $this->oModuleSettings->OutgoingUseSsl,
                     $this->oModuleSettings->SmtpAuthType,
